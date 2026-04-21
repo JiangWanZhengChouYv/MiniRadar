@@ -1,6 +1,6 @@
 plugins {
-    // 26.1 必须用这个新插件！
-    id 'net.fabricmc.fabric-loom' version '1.15'
+    // 26.1 必须用这个插件！
+    id 'fabric-loom' version '1.15-SNAPSHOT'
     id 'maven-publish'
 }
 
