@@ -21,10 +21,13 @@ jobs:
         java-version: '25'
         cache: 'gradle'
       
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+      
     - name: Build with Gradle
       run: |
         echo "::group::Building mod with Gradle"
-        gradle build --info
+        ./gradlew build --info
         echo "::endgroup::"
       
     - name: Upload build artifacts
@@ -32,15 +35,3 @@ jobs:
       with:
         name: miniradar-mod
         path: build/libs/*.jar
-        
-    - name: Build singleplayer version
-      run: |
-        echo "::group::Building singleplayer version"
-        gradle build --info
-        echo "::endgroup::"
-      
-    - name: Build multiplayer version
-      run: |
-        echo "::group::Building multiplayer version"
-        gradle build --info
-        echo "::endgroup::"
