@@ -1,6 +1,6 @@
 plugins {
     // 26.1专用Loom插件，支持新版本号
-    id 'fabric-loom' version "${project.loom_version}"
+    id 'fabric-loom' version '1.10.34'
     id 'java-library'
     id 'maven-publish'
 }
@@ -37,13 +37,13 @@ loom {
 // 依赖配置（26.1专用，无Yarn依赖）
 dependencies {
     // Minecraft 核心依赖
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    minecraft "com.mojang:minecraft:26.1"
     // 官方映射（26.1必用）
     mappings loom.officialMojangMappings()
     // Fabric 加载器
-    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:0.17.16"
     // Fabric API（匹配26.1版本）
-    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:0.101.0+26.1"
 }
 
 // 打包配置（26.1专用，简化输出）
