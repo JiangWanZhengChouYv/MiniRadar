@@ -1,52 +1,70 @@
 plugins {
-    // 26.1 必须用这个插件！
-    id 'fabric-loom' version '1.15-SNAPSHOT'
+    // 26.1专用Loom插件，支持新版本号
+    id 'fabric-loom' version "${project.loom_version}"
+    id 'java-library'
     id 'maven-publish'
 }
 
-version = project.mod_version
-group = project.maven_group
+// 基础项目配置
+group = 'com.miniradar'
+version = '1.0.0'
+description = 'MiniRadar 26.1 版模组'
 
-repositories {
-    mavenCentral()
-    maven {
-        name = "Fabric"
-        url = "https://maven.fabricmc.net/"
-    }
-    maven {
-        name = "Mojang"
-        url = "https://libraries.minecraft.net/"
+// Java 编译配置（严格匹配Java 25）
+sourceCompatibility = JavaVersion.VERSION_25
+targetCompatibility = JavaVersion.VERSION_25
+compileJava {
+    options.encoding = 'UTF-8'
+    options.compilerArgs += ['-Xlint:-options']
+}
+compileTestJava {
+    options.encoding = 'UTF-8'
+}
+
+// Fabric 模组配置（26.1专用，启用官方mojmap）
+loom {
+    officialMojangMappings() // 替代Yarn，26.1核心配置
+    runs {
+        client {
+            environment 'development'
+        }
+        server {
+            environment 'development'
+        }
     }
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
-}
-
+// 依赖配置（26.1专用，无Yarn依赖）
 dependencies {
+    // Minecraft 核心依赖
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    // 26.1 是无反混淆官方版，不需要 mappings
-    
-    // 26.1 不用 modImplementation → 改用 implementation！
-    implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-    implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    // 官方映射（26.1必用）
+    mappings loom.officialMojangMappings()
+    // Fabric 加载器
+    modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+    // Fabric API（匹配26.1版本）
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
-// 26.1 不用 remapJar → 直接 jar
+// 打包配置（26.1专用，简化输出）
 jar {
+    archiveBaseName = 'miniradar'
+    archiveVersion = project.version
     from('src/main/resources') {
         include 'fabric.mod.json'
     }
 }
 
+// 发布配置（可选，用于上传Maven）
 publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
     repositories {
-        mavenLocal()
+        maven {
+            url = "${project.findProperty('mavenRepoUrl') ?: 'build/repo'}"
+        }
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
     }
 }
