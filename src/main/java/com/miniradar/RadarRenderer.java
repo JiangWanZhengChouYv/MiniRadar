@@ -3,7 +3,6 @@ package com.miniradar;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +24,7 @@ public class RadarRenderer implements HudRenderCallback {
     }
     
     @Override
-    public void onHudRender(MatrixStack matrixStack, float tickDelta) {
+    public void onHudRender(DrawContext drawContext, float tickDelta) {
         try {
             if (client == null || client.player == null || client.world == null || radarManager == null) return;
             
@@ -33,53 +32,51 @@ public class RadarRenderer implements HudRenderCallback {
             radarManager.update();
             
             // 绘制雷达背景
-            drawRadarBackground(matrixStack);
+            drawRadarBackground(drawContext);
             
             // 绘制玩家位置
-            drawPlayerMarker(matrixStack);
+            drawPlayerMarker(drawContext);
             
             // 绘制实体
-            drawEntities(matrixStack);
+            drawEntities(drawContext);
         } catch (Exception e) {
             // 捕获并记录任何渲染过程中的异常
             e.printStackTrace();
         }
     }
     
-    private void drawRadarBackground(MatrixStack matrixStack) {
+    private void drawRadarBackground(DrawContext drawContext) {
         try {
             if (client == null) return;
             
             // 绘制半透明黑色背景
-            DrawContext drawContext = new DrawContext(client, client.getBufferBuilders().getEntityVertexConsumers());
-            drawContext.fill(matrixStack, 10, 10, 10 + RADAR_SIZE, 10 + RADAR_SIZE, 0x99000000);
+            drawContext.fill(10, 10, 10 + RADAR_SIZE, 10 + RADAR_SIZE, 0x99000000);
             
             // 绘制白色边框
-            drawContext.drawBorder(matrixStack, 10, 10, RADAR_SIZE, RADAR_SIZE, 0xFFFFFFFF);
+            drawContext.drawBorder(10, 10, RADAR_SIZE, RADAR_SIZE, 0xFFFFFFFF);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    private void drawPlayerMarker(MatrixStack matrixStack) {
+    private void drawPlayerMarker(DrawContext drawContext) {
         try {
             if (client == null) return;
             
             // 绘制玩家位置（白色大点，直径8像素）
-            DrawContext drawContext = new DrawContext(client, client.getBufferBuilders().getEntityVertexConsumers());
             int centerX = 10 + RADAR_CENTER;
             int centerY = 10 + RADAR_CENTER;
             
             // 黑色描边
-            drawContext.fill(matrixStack, centerX - 4 - 1, centerY - 4 - 1, centerX + 4 + 1, centerY + 4 + 1, 0xFF000000);
+            drawContext.fill(centerX - 4 - 1, centerY - 4 - 1, centerX + 4 + 1, centerY + 4 + 1, 0xFF000000);
             // 白色填充
-            drawContext.fill(matrixStack, centerX - 4, centerY - 4, centerX + 4, centerY + 4, 0xFFFFFFFF);
+            drawContext.fill(centerX - 4, centerY - 4, centerX + 4, centerY + 4, 0xFFFFFFFF);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
     
-    private void drawEntities(MatrixStack matrixStack) {
+    private void drawEntities(DrawContext drawContext) {
         try {
             if (client == null || radarManager == null) return;
             
@@ -108,7 +105,7 @@ public class RadarRenderer implements HudRenderCallback {
                     
                     // 确保点在雷达范围内（双重检查，确保万无一失）
                     if (radarX >= 0 && radarX < RADAR_SIZE && radarZ >= 0 && radarZ < RADAR_SIZE) {
-                        drawEntityMarker(matrixStack, (int) radarX, (int) radarZ, entity);
+                        drawEntityMarker(drawContext, (int) radarX, (int) radarZ, entity);
                     }
                 } catch (Exception e) {
                     // 捕获单个实体渲染的异常，避免影响其他实体的渲染
@@ -120,11 +117,10 @@ public class RadarRenderer implements HudRenderCallback {
         }
     }
     
-    private void drawEntityMarker(MatrixStack matrixStack, int x, int y, Entity entity) {
+    private void drawEntityMarker(DrawContext drawContext, int x, int y, Entity entity) {
         try {
             if (client == null || entity == null) return;
             
-            DrawContext drawContext = new DrawContext(client, client.getBufferBuilders().getEntityVertexConsumers());
             int screenX = 10 + x;
             int screenY = 10 + y;
             
@@ -159,9 +155,9 @@ public class RadarRenderer implements HudRenderCallback {
             
             if (size > 0) {
                 // 黑色描边
-                drawContext.fill(matrixStack, screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);
+                drawContext.fill(screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);
                 // 颜色填充
-                drawContext.fill(matrixStack, screenX - size, screenY - size, screenX + size, screenY + size, color);
+                drawContext.fill(screenX - size, screenY - size, screenX + size, screenY + size, color);
             }
         } catch (Exception e) {
             e.printStackTrace();
