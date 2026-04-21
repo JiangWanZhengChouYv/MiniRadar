@@ -21,13 +21,10 @@ jobs:
         java-version: '25'
         cache: 'gradle'
       
-    - name: Grant execute permission for gradlew
-      run: chmod +x ./gradlew
-      
     - name: Build with Gradle
       run: |
         echo "::group::Building mod with Gradle"
-        ./gradlew build --info
+        gradle build --info
         echo "::endgroup::"
       
     - name: Upload build artifacts
@@ -39,11 +36,11 @@ jobs:
     - name: Build singleplayer version
       run: |
         echo "::group::Building singleplayer version"
-        ./gradlew build --info
+        gradle build --info
         echo "::endgroup::"
       
     - name: Build multiplayer version
       run: |
         echo "::group::Building multiplayer version"
-        ./gradlew build --info
+        gradle build --info
         echo "::endgroup::"
