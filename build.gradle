@@ -24,14 +24,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
-// 26.1 核心：启用官方 Mojang 映射
-loom {
-    officialMojangMappings() // 替代 Yarn！
-}
-
 dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings() // 26.1 专用
+    // 26.1 是无反混淆官方版，不需要 mappings
     
     // 26.1 不用 modImplementation → 改用 implementation！
     implementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
