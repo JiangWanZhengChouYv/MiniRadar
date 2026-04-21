@@ -17,13 +17,10 @@ jobs:
           distribution: temurin
           cache: gradle
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       # 26.1 干净构建
       - name: Build with Gradle
         run: |
-          ./gradlew clean build --no-daemon -Dfile.encoding=UTF-8
+          gradle clean build --no-daemon -Dfile.encoding=UTF-8
 
       - name: Upload 26.1 Mod
         uses: actions/upload-artifact@v4
