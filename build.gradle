@@ -1,6 +1,5 @@
 plugins {
-    // 26.1专用Loom插件，支持新版本号
-    id 'fabric-loom' version '1.10.34'
+    id 'net.fabricmc.fabric-loom' version '1.10.34'
     id 'java-library'
     id 'maven-publish'
 }
