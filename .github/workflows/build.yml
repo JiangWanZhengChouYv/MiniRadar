@@ -18,19 +18,19 @@ jobs:
         with:
           fetch-depth: 0  # 完整拉取代码，避免文件缺失
 
-      # 安装Java 25（Minecraft 26.1强制要求）
-      - name: Set up JDK 25
+      # 安装Java 21（Minecraft 26.1强制要求）
+      - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
-          java-version: 25
+          java-version: 21
           distribution: temurin
           cache: gradle
 
-      # 安装Gradle 9.4.1
+      # 安装Gradle 8.11.1
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
-          gradle-version: 9.4.1
+          gradle-version: 8.11.1
 
       # 清理旧缓存并构建（26.1专用，无多余参数）
       - name: Build Mod
