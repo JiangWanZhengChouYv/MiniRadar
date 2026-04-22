@@ -30,7 +30,7 @@ jobs:
       - name: Fix Gradle Wrapper
         run: |
           chmod +x gradlew
-          gradle wrapper --gradle-version 8.11.1
+          ./gradlew wrapper --gradle-version 8.11.1
 
       # 清理旧缓存并构建（26.1专用，无多余参数）
       - name: Build Mod
@@ -46,3 +46,4 @@ jobs:
             build/libs/*.jar
             !build/libs/*-dev.jar
             !build/libs/*-sources.jar
+            !build/libs/*-javadoc.jar
