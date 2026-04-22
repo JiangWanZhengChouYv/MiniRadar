@@ -1,4 +1,5 @@
 plugins {
+    // 使用新的Fabric Loom插件ID，支持Minecraft 26.1
     id 'net.fabricmc.fabric-loom' version '1.10.34'
     id 'java-library'
     id 'maven-publish'
@@ -9,7 +10,7 @@ group = 'com.miniradar'
 version = '1.0.0'
 description = 'MiniRadar 26.1 版模组'
 
-// Java 编译配置（严格匹配Java 25）
+// Java 编译配置（Minecraft 26.1强制要求Java 25）
 sourceCompatibility = JavaVersion.VERSION_25
 targetCompatibility = JavaVersion.VERSION_25
 compileJava {
@@ -20,9 +21,10 @@ compileTestJava {
     options.encoding = 'UTF-8'
 }
 
-// Fabric 模组配置（26.1专用，启用官方mojmap）
+// Fabric 模组配置（26.1专用，启用官方Mojang映射）
 loom {
-    officialMojangMappings() // 替代Yarn，26.1核心配置
+    // 使用官方Mojang映射，26.1已废弃Yarn映射
+    officialMojangMappings()
     runs {
         client {
             environment 'development'
@@ -37,11 +39,11 @@ loom {
 dependencies {
     // Minecraft 核心依赖
     minecraft "com.mojang:minecraft:26.1"
-    // 官方映射（26.1必用）
+    // 官方Mojang映射（26.1必用）
     mappings loom.officialMojangMappings()
-    // Fabric 加载器
+    // Fabric 加载器（26.1配套版本）
     modImplementation "net.fabricmc:fabric-loader:0.17.16"
-    // Fabric API（匹配26.1版本）
+    // Fabric API（26.1配套版本）
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.101.0+26.1"
 }
 
@@ -60,10 +62,10 @@ publishing {
         maven {
             url = "${project.findProperty('mavenRepoUrl') ?: 'build/repo'}"
         }
-        publications {
-            mavenJava(MavenPublication) {
-                from components.java
-            }
+    }
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
         }
     }
 }
