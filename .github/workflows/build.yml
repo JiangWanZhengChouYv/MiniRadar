@@ -24,7 +24,6 @@ jobs:
         with:
           java-version: 21
           distribution: temurin
-          cache: gradle
 
       # 安装Gradle 8.11.1
       - name: Set up Gradle
