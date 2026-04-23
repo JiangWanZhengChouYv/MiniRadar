@@ -15,10 +15,6 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-neoForge {
-    version = neo_version
-}
-
 repositories {
     mavenLocal()
     mavenCentral()
