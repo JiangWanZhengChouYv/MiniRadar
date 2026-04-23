@@ -13,7 +13,7 @@ fi
 
 dirname="$(cd "$(dirname "$0")" && pwd)"
 
-# Set Java 25
+# Set Java 21
 export JAVA_HOME="/opt/homebrew/Cellar/openjdk/25.0.2/libexec/openjdk.jdk/Contents/Home"
 export PATH="$JAVA_HOME/bin:$PATH"
 
