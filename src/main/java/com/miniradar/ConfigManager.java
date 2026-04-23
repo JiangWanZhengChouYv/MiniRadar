@@ -2,7 +2,7 @@ package com.miniradar;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
+import net.neoforged.fml.loading.FMLPaths;
 
 import java.io.*;
 import java.nio.file.*;
@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ConfigManager {
-    private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("miniradar.json");
+    private static final Path CONFIG_PATH = FMLPaths.CONFIGDIR.get().resolve("miniradar.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     
     private Config config;
@@ -46,7 +46,6 @@ public class ConfigManager {
                                 if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
                                     Path modifiedPath = (Path) event.context();
                                     if (modifiedPath != null && CONFIG_PATH.getFileName() != null && modifiedPath.equals(CONFIG_PATH.getFileName())) {
-                                        // 配置文件被修改，重新加载
                                         loadConfig();
                                     }
                                 }
@@ -88,7 +87,6 @@ public class ConfigManager {
                     reader = Files.newBufferedReader(CONFIG_PATH);
                     config = GSON.fromJson(reader, Config.class);
                     
-                    // 验证配置值
                     validateConfig();
                 } finally {
                     if (reader != null) {
@@ -100,12 +98,10 @@ public class ConfigManager {
                     }
                 }
             } else {
-                // 创建默认配置
                 config = new Config();
                 saveConfig();
             }
         } catch (Exception e) {
-            // 如果加载失败，使用默认配置
             e.printStackTrace();
             config = new Config();
             saveConfig();
@@ -118,7 +114,6 @@ public class ConfigManager {
                 return;
             }
             
-            // 确保配置目录存在
             try {
                 Files.createDirectories(CONFIG_PATH.getParent());
             } catch (Exception e) {

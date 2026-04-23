@@ -30,44 +30,37 @@ public class RadarManager {
         try {
             long currentTime = System.currentTimeMillis();
             if (currentTime - lastUpdateTime < UPDATE_INTERVAL_MS) {
-                return; // 控制更新频率不超过20次/秒
+                return;
             }
             
-            if (client == null || client.world == null || client.player == null) {
+            if (client == null || client.level == null || client.player == null) {
                 detectedEntities.clear();
                 return;
             }
             
-            ClientWorld world = client.world;
+            var world = client.level;
             PlayerEntity player = client.player;
             
-            // 获取玩家周围已加载区块中的实体
             BlockPos playerPos = player.getBlockPos();
             int maxDistance = configManager.getDetectionRadius();
             
-            // 只检测已加载区块内的实体，不主动加载未加载区域
-            detectedEntities = world.getEntitiesByClass(Entity.class, player.getBoundingBox().expand(maxDistance), entity -> {
+            detectedEntities = world.getEntitiesOfClass(Entity.class, player.getBoundingBox().inflate(maxDistance), entity -> {
                 try {
-                    // 过滤掉玩家自己
                     if (entity == player) return false;
                     
-                    // 过滤掉太远的实体
-                    if (entity.squaredDistanceTo(player) > maxDistance * maxDistance) return false;
+                    if (entity.distanceToSqr(player) > maxDistance * maxDistance) return false;
                     
-                    // 过滤掉不在已加载区块中的实体
                     BlockPos entityPos = entity.getBlockPos();
-                    if (!world.isChunkLoaded(entityPos.getX() >> 4, entityPos.getZ() >> 4)) return false;
+                    if (!world.hasChunkAt(entityPos)) return false;
                     
                     return true;
                 } catch (Exception e) {
-                    // 捕获单个实体处理的异常，避免影响整个更新过程
                     return false;
                 }
             });
             
             lastUpdateTime = currentTime;
         } catch (Exception e) {
-            // 捕获并记录任何更新过程中的异常
             e.printStackTrace();
             detectedEntities.clear();
         }

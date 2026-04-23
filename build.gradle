@@ -1,62 +1,41 @@
 plugins {
-    // 使用新的Fabric Loom插件ID，支持Minecraft 26.1
-    id 'net.fabricmc.fabric-loom' version '1.10.34'
-    id 'java-library'
-    id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.100' apply false
 }
+
+apply plugin: 'net.neoforged.gradle.userdev'
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
 
 // 基础项目配置
 group = 'com.miniradar'
 version = '1.0.0'
-description = 'MiniRadar 26.1 版模组'
+description = 'MiniRadar 26.1.2 版模组'
 
-// Java 编译配置（Minecraft 26.1强制要求Java 25）
-sourceCompatibility = JavaVersion.VERSION_25
-targetCompatibility = JavaVersion.VERSION_25
+// Java 编译配置
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 compileJava {
     options.encoding = 'UTF-8'
-    options.compilerArgs += ['-Xlint:-options']
-}
-compileTestJava {
-    options.encoding = 'UTF-8'
 }
 
-// Fabric 模组配置（26.1专用，启用官方Mojang映射）
-loom {
-    // 使用官方Mojang映射，26.1已废弃Yarn映射
-    officialMojangMappings()
-    runs {
-        client {
-            environment 'development'
-        }
-        server {
-            environment 'development'
-        }
-    }
+// NeoForge 配置
+neoForge {
+    version = '26.1.2'
 }
 
-// 依赖配置（26.1专用，无Yarn依赖）
+// 依赖配置
 dependencies {
-    // Minecraft 核心依赖
-    minecraft "com.mojang:minecraft:26.1"
-    // 官方Mojang映射（26.1必用）
-    mappings loom.officialMojangMappings()
-    // Fabric 加载器（26.1配套版本）
-    modImplementation "net.fabricmc:fabric-loader:0.17.16"
-    // Fabric API（26.1配套版本）
-    modImplementation "net.fabricmc.fabric-api:fabric-api:0.101.0+26.1"
+    minecraft 'com.mojang:minecraft:26.1.2'
+    neoForge 'net.neoforged:neoforge:26.1.2'
 }
 
-// 打包配置（26.1专用，简化输出）
+// 打包配置
 jar {
     archiveBaseName = 'miniradar'
     archiveVersion = project.version
-    from('src/main/resources') {
-        include 'fabric.mod.json'
-    }
 }
 
-// 发布配置（可选，用于上传Maven）
+// 发布配置
 publishing {
     repositories {
         maven {

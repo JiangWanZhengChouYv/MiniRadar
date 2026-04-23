@@ -1,27 +1,48 @@
 package com.miniradar;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraft.client.MinecraftClient;
 
-public class MiniRadar implements ClientModInitializer {
+@Mod("miniradar")
+public class MiniRadar {
     public static RadarManager radarManager;
     
-    @Override
-    public void onInitializeClient() {
+    public MiniRadar(IEventBus modEventBus) {
         try {
-            // 初始化RadarManager，确保MinecraftClient实例不为空
+            modEventBus.addListener(this::onClientSetup);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    @OnlyIn(Dist.CLIENT)
+    private void onClientSetup(FMLClientSetupEvent event) {
+        try {
             MinecraftClient client = MinecraftClient.getInstance();
             if (client != null) {
                 radarManager = new RadarManager(client);
-                
-                // 注册HudRenderCallback，确保radarManager不为空
                 if (radarManager != null) {
-                    HudRenderCallback.EVENT.register(new RadarRenderer(radarManager));
+                    net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent.register(this::registerOverlays);
                 }
             }
         } catch (Exception e) {
-            // 捕获并记录任何初始化过程中的异常
+            e.printStackTrace();
+        }
+    }
+    
+    @OnlyIn(Dist.CLIENT)
+    private void registerOverlays(net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent event) {
+        try {
+            event.registerAboveAll("miniradar", (gui, poseStack, partialTick, width, height) -> {
+                if (radarManager != null) {
+                    new RadarRenderer(radarManager).render(gui, poseStack, partialTick, width, height);
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

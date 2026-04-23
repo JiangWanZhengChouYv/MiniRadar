@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[26,)"
+license="MIT"
+showAsResourcePack=false
+
+[[mods]]
+modId="miniradar"
+version="1.0.0"
+name="MiniRadar"
+description="A simple radar mod for Minecraft"
+authors=["Your Name"]
+homepage="https://example.com"
+sources="https://github.com/yourusername/miniradar"
+environment="client"
+icon="assets/miniradar/icon.png"
+
+[[dependencies.miniradar]]
+modId="neoforge"
+mandatory=true
+versionRange="[26.1.2,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.miniradar]]
+modId="minecraft"
+mandatory=true
+versionRange="[26.1.2,)"
+ordering="NONE"
+side="BOTH"
