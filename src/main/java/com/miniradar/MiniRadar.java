@@ -1,49 +1,39 @@
 package com.miniradar;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraft.client.MinecraftClient;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.fml.common.Mod;
+import net.neoforged.neoforge.client.event.ClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
-@Mod("miniradar")
-public class MiniRadar {
+@Mod(value = MiniRadar.MOD_ID, dist = Dist.CLIENT)
+public class MiniRadar
+{
+    public static final String MOD_ID = "miniradar";
+
+    public static ConfigManager configManager;
     public static RadarManager radarManager;
-    
-    public MiniRadar(IEventBus modEventBus) {
-        try {
-            modEventBus.addListener(this::onClientSetup);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static RadarRenderer radarRenderer;
+
+    @SubscribeEvent
+    public static void onClientSetup(ClientSetupEvent event)
+    {
+        configManager = new ConfigManager();
+        radarManager = new RadarManager();
+        radarRenderer = new RadarRenderer();
+        NeoForge.EVENT_BUS.register(MiniRadar.class);
     }
-    
-    @OnlyIn(Dist.CLIENT)
-    private void onClientSetup(FMLClientSetupEvent event) {
-        try {
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client != null) {
-                radarManager = new RadarManager(client);
-                if (radarManager != null) {
-                    net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent.register(this::registerOverlays);
-                }
+
+    @SubscribeEvent
+    public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event)
+    {
+        event.registerAboveAll(MiniRadar.MOD_ID, (gui, poseStack, partialTick, width, height) -> {
+            if (radarManager != null && radarRenderer != null) {
+                radarManager.update();
+                radarRenderer.render(gui, poseStack, partialTick, width, height);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    @OnlyIn(Dist.CLIENT)
-    private void registerOverlays(net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent event) {
-        try {
-            event.registerAboveAll("miniradar", (gui, poseStack, partialTick, width, height) -> {
-                if (radarManager != null) {
-                    new RadarRenderer(radarManager).render(gui, poseStack, partialTick, width, height);
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 }

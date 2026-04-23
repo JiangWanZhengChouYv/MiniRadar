@@ -1,143 +1,140 @@
 package com.miniradar;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.monster.CreeperEntity;
+import net.minecraft.entity.monster.EndermanEntity;
+import net.minecraft.entity.monster.SkeletonEntity;
+import net.minecraft.entity.monster.SpiderEntity;
+import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemEntity;
+import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.Vec3d;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.List;
 
-public class RadarRenderer {
+public class RadarRenderer
+{
     private final MinecraftClient client = MinecraftClient.getInstance();
     private final RadarManager radarManager;
-    
+
     private static final int RADAR_SIZE = 100;
-    private static final int RADAR_CENTER = RADAR_SIZE / 2;
-    
-    public RadarRenderer(RadarManager radarManager) {
+    private static final int RADAR_CENTER = 50;
+    private static final int RADAR_OFFSET = 10;
+
+    public RadarRenderer(RadarManager radarManager)
+    {
         this.radarManager = radarManager;
     }
-    
-    public void render(Object gui, GuiGraphics guiGraphics, float partialTick, int width, int height) {
+
+    public void render(AbstractGui gui, PoseStack poseStack, float partialTick, int width, int height)
+    {
         try {
-            if (client == null || client.player == null || client.level == null || radarManager == null) return;
-            
+            if (client == null || client.player == null || client.level == null || radarManager == null) {
+                return;
+            }
+
             radarManager.update();
-            
-            drawRadarBackground(guiGraphics);
-            
-            drawPlayerMarker(guiGraphics);
-            
-            drawEntities(guiGraphics);
+
+            drawRadarBackground(gui);
+            drawPlayerMarker(gui);
+            drawEntities(gui, partialTick);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    private void drawRadarBackground(GuiGraphics guiGraphics) {
-        try {
-            if (client == null) return;
-            
-            guiGraphics.fill(10, 10, 10 + RADAR_SIZE, 10 + RADAR_SIZE, 0x99000000);
-            
-            guiGraphics.drawOutline(10, 10, 10 + RADAR_SIZE, 10 + RADAR_SIZE, 0xFFFFFFFF);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    private void drawRadarBackground(AbstractGui gui)
+    {
+        gui.fill(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0x99000000);
+        gui.drawOutline(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
     }
-    
-    private void drawPlayerMarker(GuiGraphics guiGraphics) {
-        try {
-            if (client == null) return;
-            
-            int centerX = 10 + RADAR_CENTER;
-            int centerY = 10 + RADAR_CENTER;
-            
-            guiGraphics.fill(centerX - 4 - 1, centerY - 4 - 1, centerX + 4 + 1, centerY + 4 + 1, 0xFF000000);
-            
-            guiGraphics.fill(centerX - 4, centerY - 4, centerX + 4, centerY + 4, 0xFFFFFFFF);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+    private void drawPlayerMarker(AbstractGui gui)
+    {
+        int centerX = RADAR_OFFSET + RADAR_CENTER;
+        int centerY = RADAR_OFFSET + RADAR_CENTER;
+        int size = 4;
+
+        gui.fill(centerX - size - 1, centerY - size - 1, centerX + size + 1, centerY + size + 1, 0xFF000000);
+        gui.fill(centerX - size, centerY - size, centerX + size, centerY + size, 0xFFFFFFFF);
     }
-    
-    private void drawEntities(GuiGraphics guiGraphics) {
-        try {
-            if (client == null || radarManager == null) return;
-            
-            List<Entity> entities = radarManager.getEntitiesInRadarRange();
-            PlayerEntity player = client.player;
-            
-            if (player == null) return;
-            
-            Vec3d playerPos = player.getPosition(0);
-            float playerYaw = player.getYRot();
-            int maxDistance = radarManager.getConfigManager().getDetectionRadius();
-            
-            double scaleFactor = RADAR_CENTER / (double) maxDistance;
-            
-            for (Entity entity : entities) {
-                try {
-                    if (entity == null) continue;
-                    
-                    Vec3d rotatedPos = radarManager.rotateCoordinates(entity.getPosition(0), playerPos, playerYaw);
-                    
-                    double radarX = (rotatedPos.x * scaleFactor) + RADAR_CENTER;
-                    double radarZ = (rotatedPos.z * scaleFactor) + RADAR_CENTER;
-                    
-                    if (radarX >= 0 && radarX < RADAR_SIZE && radarZ >= 0 && radarZ < RADAR_SIZE) {
-                        drawEntityMarker(guiGraphics, (int) radarX, (int) radarZ, entity);
-                    }
-                } catch (Exception e) {
-                    continue;
-                }
+
+    private void drawEntities(AbstractGui gui, float partialTick)
+    {
+        if (client == null || radarManager == null) {
+            return;
+        }
+
+        List<Entity> entities = radarManager.getEntitiesInRadarRange();
+        PlayerEntity player = client.player;
+
+        if (player == null) {
+            return;
+        }
+
+        Vec3d playerPos = player.getPosition(partialTick);
+        float playerYaw = player.getYRot();
+        int maxDistance = radarManager.getConfigManager().getDetectionRadius();
+
+        double scaleFactor = RADAR_CENTER / (double) maxDistance;
+
+        for (Entity entity : entities) {
+            if (entity == null) {
+                continue;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+            Vec3d rotatedPos = radarManager.rotateCoordinates(entity.getPosition(partialTick), playerPos, playerYaw);
+
+            double radarX = (rotatedPos.x * scaleFactor) + RADAR_CENTER;
+            double radarZ = (rotatedPos.z * scaleFactor) + RADAR_CENTER;
+
+            if (radarX >= 0 && radarX < RADAR_SIZE && radarZ >= 0 && radarZ < RADAR_SIZE) {
+                drawEntityMarker(gui, (int) radarX, (int) radarZ, entity);
+            }
         }
     }
-    
-    private void drawEntityMarker(GuiGraphics guiGraphics, int x, int y, Entity entity) {
-        try {
-            if (client == null || entity == null) return;
-            
-            int screenX = 10 + x;
-            int screenY = 10 + y;
-            
-            int size = 0;
-            int color = 0;
-            
-            if (entity instanceof PlayerEntity) {
-                size = 3;
-                color = 0xFF00FFFF;
-            } else if (entity instanceof LivingEntity livingEntity) {
-                try {
-                    if (livingEntity.isHostile()) {
-                        size = 2;
-                        color = 0xFFFF0000;
-                    } else {
-                        size = 2;
-                        color = 0xFF00FF00;
-                    }
-                } catch (Exception e) {
-                    size = 2;
-                    color = 0xFF808080;
-                }
-            } else if (entity instanceof ItemEntity) {
-                size = 2;
-                color = 0xFFFFFF00;
-            }
-            
-            if (size > 0) {
-                guiGraphics.fill(screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);
-                
-                guiGraphics.fill(screenX - size, screenY - size, screenX + size, screenY + size, color);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+
+    private void drawEntityMarker(AbstractGui gui, int x, int y, Entity entity)
+    {
+        int screenX = RADAR_OFFSET + x;
+        int screenY = RADAR_OFFSET + y;
+        int size = 2;
+
+        int color = getEntityColor(entity);
+
+        gui.fill(screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);
+        gui.fill(screenX - size, screenY - size, screenX + size, screenY + size, color);
+    }
+
+    private int getEntityColor(Entity entity)
+    {
+        if (entity.getType().toString().equals("player")) {
+            return 0xFF00FFFF;
         }
+
+        if (entity instanceof ItemEntity) {
+            return 0xFFFFFF00;
+        }
+
+        if (entity instanceof LivingEntity livingEntity) {
+            if (entity instanceof CreeperEntity || entity instanceof ZombieEntity || entity instanceof SkeletonEntity ||
+                entity instanceof SpiderEntity || entity instanceof EndermanEntity) {
+                return 0xFFFF0000;
+            }
+
+            if (livingEntity instanceof PlayerEntity) {
+                return 0xFF00FFFF;
+            }
+
+            return 0xFF00FF00;
+        }
+
+        return 0xFF808080;
     }
 }

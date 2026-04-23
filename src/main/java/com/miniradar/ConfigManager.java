@@ -4,193 +4,78 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.neoforged.fml.loading.FMLPaths;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class ConfigManager {
+
     private static final Path CONFIG_PATH = FMLPaths.CONFIGDIR.get().resolve("miniradar.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-    
+
     private Config config;
-    private final ExecutorService executorService;
-    
+
     public ConfigManager() {
-        try {
-            loadConfig();
-            executorService = Executors.newSingleThreadExecutor();
-            startFileWatcher();
-        } catch (Exception e) {
-            e.printStackTrace();
-            config = new Config();
-            executorService = Executors.newSingleThreadExecutor();
-        }
+        loadConfig();
     }
-    
-    private void startFileWatcher() {
-        executorService.submit(() -> {
-            try {
-                if (CONFIG_PATH == null || CONFIG_PATH.getParent() == null) {
-                    return;
-                }
-                
-                WatchService watchService = FileSystems.getDefault().newWatchService();
-                CONFIG_PATH.getParent().register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
-                
-                while (!Thread.currentThread().isInterrupted()) {
-                    try {
-                        WatchKey key = watchService.take();
-                        for (WatchEvent<?> event : key.pollEvents()) {
-                            try {
-                                if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
-                                    Path modifiedPath = (Path) event.context();
-                                    if (modifiedPath != null && CONFIG_PATH.getFileName() != null && modifiedPath.equals(CONFIG_PATH.getFileName())) {
-                                        loadConfig();
-                                    }
-                                }
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        key.reset();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-    
-    public void shutdown() {
+
+    private void loadConfig() {
         try {
-            if (executorService != null) {
-                executorService.shutdown();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public void loadConfig() {
-        try {
-            if (CONFIG_PATH == null) {
-                config = new Config();
-                return;
-            }
-            
             if (Files.exists(CONFIG_PATH)) {
-                Reader reader = null;
-                try {
-                    reader = Files.newBufferedReader(CONFIG_PATH);
-                    config = GSON.fromJson(reader, Config.class);
-                    
-                    validateConfig();
-                } finally {
-                    if (reader != null) {
-                        try {
-                            reader.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
+                String json = Files.readString(CONFIG_PATH);
+                config = GSON.fromJson(json, Config.class);
+                if (config == null) {
+                    config = new Config();
                 }
             } else {
                 config = new Config();
-                saveConfig();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             config = new Config();
-            saveConfig();
         }
+        validateConfig();
     }
-    
-    public void saveConfig() {
+
+    private void saveConfig() {
         try {
-            if (CONFIG_PATH == null || config == null) {
-                return;
+            Path parent = CONFIG_PATH.getParent();
+            if (parent != null && !Files.exists(parent)) {
+                Files.createDirectories(parent);
             }
-            
-            try {
-                Files.createDirectories(CONFIG_PATH.getParent());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            
-            Writer writer = null;
-            try {
-                writer = Files.newBufferedWriter(CONFIG_PATH);
-                GSON.toJson(config, writer);
-            } finally {
-                if (writer != null) {
-                    try {
-                        writer.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            String json = GSON.toJson(config);
+            Files.writeString(CONFIG_PATH, json);
+        } catch (IOException e) {
         }
     }
-    
+
     private void validateConfig() {
-        try {
-            if (config == null) {
-                config = new Config();
-                return;
-            }
-            
-            // 确保检测半径在有效范围内
-            if (config.detectionRadius < 16) {
-                config.detectionRadius = 16;
-            } else if (config.detectionRadius > 128) {
-                config.detectionRadius = 128;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            config = new Config();
-        }
-    }
-    
-    public int getDetectionRadius() {
-        try {
-            if (config == null) {
-                config = new Config();
-            }
-            return config.detectionRadius;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 64; // 默认值
-        }
-    }
-    
-    public void setDetectionRadius(int radius) {
-        try {
-            if (config == null) {
-                config = new Config();
-            }
-            config.detectionRadius = radius;
-            validateConfig();
-            saveConfig();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    public Config getConfig() {
         if (config == null) {
             config = new Config();
         }
+        if (config.detectionRadius < 16) {
+            config.detectionRadius = 16;
+            saveConfig();
+        } else if (config.detectionRadius > 128) {
+            config.detectionRadius = 128;
+            saveConfig();
+        }
+    }
+
+    public int getDetectionRadius() {
+        return config.detectionRadius;
+    }
+
+    public void setDetectionRadius(int radius) {
+        config.detectionRadius = radius;
+        validateConfig();
+        saveConfig();
+    }
+
+    public Config getConfig() {
         return config;
     }
-    
+
     public static class Config {
-        public int detectionRadius = 64; // 默认64格
+        public int detectionRadius = 64;
     }
 }
