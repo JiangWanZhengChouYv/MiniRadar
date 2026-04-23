@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.gradle' version '7.0.142'
 }
 
 version = mod_version
@@ -15,6 +15,25 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+neoForge {
+    version = neo_version
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
+
+    mods {
+        miniradar {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
 repositories {
     mavenLocal()
     mavenCentral()
@@ -24,12 +43,8 @@ repositories {
     }
 }
 
-dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-}
-
 tasks.withType(ProcessResources).configureEach {
-    var replaceProperties = [
+    def replaceProperties = [
             minecraft_version   : minecraft_version,
             minecraft_version_range: minecraft_version_range,
             neo_version         : neo_version,
