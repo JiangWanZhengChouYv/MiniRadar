@@ -2,10 +2,9 @@ package com.miniradar;
 
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
 import net.neoforged.neoforge.fml.common.Mod;
 import net.neoforged.neoforge.client.event.ClientSetupEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = MiniRadar.MOD_ID, dist = Dist.CLIENT)

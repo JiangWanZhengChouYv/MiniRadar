@@ -8,18 +8,20 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ConfigManager {
-
+public class ConfigManager
+{
     private static final Path CONFIG_PATH = FMLPaths.CONFIGDIR.get().resolve("miniradar.json");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     private Config config;
 
-    public ConfigManager() {
+    public ConfigManager()
+    {
         loadConfig();
     }
 
-    private void loadConfig() {
+    private void loadConfig()
+    {
         try {
             if (Files.exists(CONFIG_PATH)) {
                 String json = Files.readString(CONFIG_PATH);
@@ -36,7 +38,8 @@ public class ConfigManager {
         validateConfig();
     }
 
-    private void saveConfig() {
+    private void saveConfig()
+    {
         try {
             Path parent = CONFIG_PATH.getParent();
             if (parent != null && !Files.exists(parent)) {
@@ -48,7 +51,8 @@ public class ConfigManager {
         }
     }
 
-    private void validateConfig() {
+    private void validateConfig()
+    {
         if (config == null) {
             config = new Config();
         }
@@ -61,21 +65,25 @@ public class ConfigManager {
         }
     }
 
-    public int getDetectionRadius() {
+    public int getDetectionRadius()
+    {
         return config.detectionRadius;
     }
 
-    public void setDetectionRadius(int radius) {
+    public void setDetectionRadius(int radius)
+    {
         config.detectionRadius = radius;
         validateConfig();
         saveConfig();
     }
 
-    public Config getConfig() {
+    public Config getConfig()
+    {
         return config;
     }
 
-    public static class Config {
+    public static class Config
+    {
         public int detectionRadius = 64;
     }
 }

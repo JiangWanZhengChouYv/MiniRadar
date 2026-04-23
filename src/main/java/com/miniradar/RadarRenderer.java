@@ -2,7 +2,6 @@ package com.miniradar;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.item.ItemEntity;
@@ -12,7 +11,6 @@ import net.minecraft.entity.monster.SkeletonEntity;
 import net.minecraft.entity.monster.SpiderEntity;
 import net.minecraft.entity.monster.ZombieEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.Vec3d;
 import com.mojang.blaze3d.vertex.PoseStack;
 
