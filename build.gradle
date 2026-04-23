@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle' version '7.0.142'
+    id 'net.neoforged.gradle.userdev' version '7.0.142'
 }
 
 version = mod_version
@@ -17,21 +17,6 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 neoForge {
     version = neo_version
-
-    runs {
-        client {
-            client()
-        }
-        server {
-            server()
-        }
-    }
-
-    mods {
-        miniradar {
-            sourceSet sourceSets.main
-        }
-    }
 }
 
 repositories {
@@ -41,6 +26,10 @@ repositories {
         name = 'NeoForge'
         url = 'https://maven.neoforged.net/releases'
     }
+}
+
+dependencies {
+    implementation fg.deobf("net.neoforged:neoforge:${neo_version}")
 }
 
 tasks.withType(ProcessResources).configureEach {
