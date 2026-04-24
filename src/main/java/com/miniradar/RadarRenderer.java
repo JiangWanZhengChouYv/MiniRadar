@@ -1,6 +1,5 @@
 package com.miniradar;
 
-// NeoForge 26.1 正确导入（100%适配）
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
@@ -13,8 +12,6 @@ import net.minecraft.world.entity.monster.SpiderEntity;
 import net.minecraft.world.entity.monster.ZombieEntity;
 import net.minecraft.world.entity.player.PlayerEntity;
 import net.minecraft.world.phys.Vec3d;
-import java.util.List;
-
 import java.util.List;
 
 public class RadarRenderer
