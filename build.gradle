@@ -15,19 +15,20 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
+// 👇👇👇 【关键】只保留这一行，其他全部删除
+neoForge {
+    version = neo_version
 }
 
 tasks.withType(ProcessResources).configureEach {
     def replaceProperties = [
-        minecraft_version: minecraft_version,
-        mod_id: mod_id,
-        mod_name: mod_name,
-        mod_license: mod_license,
-        mod_version: mod_version,
-        mod_authors: mod_authors,
-        mod_description: mod_description
+            minecraft_version   : minecraft_version,
+            mod_id              : mod_id,
+            mod_name            : mod_name,
+            mod_license         : mod_license,
+            mod_version         : mod_version,
+            mod_authors         : mod_authors,
+            mod_description     : mod_description
     ]
     inputs.properties replaceProperties
 
@@ -41,7 +42,5 @@ publishing {
         mavenJava(MavenPublication) {
             from components.java
         }
-    }
-    repositories {
     }
 }
