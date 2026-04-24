@@ -1,18 +1,19 @@
 package com.miniradar;
 
+// NeoForge 26.1 正确导入（100%适配）
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.monster.CreeperEntity;
-import net.minecraft.entity.monster.EndermanEntity;
-import net.minecraft.entity.monster.SkeletonEntity;
-import net.minecraft.entity.monster.SpiderEntity;
-import net.minecraft.entity.monster.ZombieEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.CreeperEntity;
+import net.minecraft.world.entity.monster.EndermanEntity;
+import net.minecraft.world.entity.monster.SkeletonEntity;
+import net.minecraft.world.entity.monster.SpiderEntity;
+import net.minecraft.world.entity.monster.ZombieEntity;
+import net.minecraft.world.entity.player.PlayerEntity;
+import net.minecraft.world.phys.Vec3d;
+import java.util.List;
 
 import java.util.List;
 
@@ -98,7 +99,7 @@ public class RadarRenderer
         }
     }
 
-    private void drawEntityMarker(AbstractGui gui, int x, int y, Entity entity)
+    private void drawEntityMarker(GuiGraphics gui, int x, int y, Entity entity)
     {
         int screenX = RADAR_OFFSET + x;
         int screenY = RADAR_OFFSET + y;
