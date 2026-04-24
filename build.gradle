@@ -1,8 +1,5 @@
 plugins {
     id 'java-library'
-    id 'eclipse'
-    id 'idea'
-    id 'maven-publish'
     id 'net.neoforged.gradle.userdev' version '7.0.142'
 }
 
@@ -13,20 +10,15 @@ base {
     archivesName = mod_id
 }
 
-// 👇👇👇 直接删掉这行坑爹的JDK配置！NeoForge自动处理！
-// 彻底无坑！
-
-neoForge {
-    version = neo_version
+// 👇 彻底删除 neoForge{}！彻底删除JDK配置！彻底删除所有坑！
+// 👇 只保留官方最小依赖，解决类找不到 + 空指针 + 方法不存在
+dependencies {
+    implementation fg.deobf("net.neoforged:neoforge:${neo_version}")
 }
 
 tasks.withType(ProcessResources).configureEach {
     def replaceProperties = [
             minecraft_version   : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
-            neo_version         : neo_version,
-            neo_version_range   : neo_version_range,
-            loader_version_range: loader_version_range,
             mod_id              : mod_id,
             mod_name            : mod_name,
             mod_license         : mod_license,
@@ -35,15 +27,12 @@ tasks.withType(ProcessResources).configureEach {
             mod_description     : mod_description
     ]
     inputs.properties replaceProperties
-    filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
+    filesMatching(['META-INF/mods.tomm', 'pack.mcmeta']) {
         expand replaceProperties
     }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
