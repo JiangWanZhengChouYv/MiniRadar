@@ -1,10 +1,9 @@
 package com.miniradar;
 
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiOverlaysEvent;
-import net.neoforged.neoforge.fml.common.Mod;
-import net.neoforged.neoforge.client.event.ClientSetupEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.gui.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 
 @Mod(value = MiniRadar.MOD_ID, dist = Dist.CLIENT)
@@ -16,23 +15,20 @@ public class MiniRadar
     public static RadarManager radarManager;
     public static RadarRenderer radarRenderer;
 
-    @SubscribeEvent
-    public static void onClientSetup(ClientSetupEvent event)
-    {
+    public MiniRadar() {
         configManager = new ConfigManager();
         radarManager = new RadarManager();
-        radarRenderer = new RadarRenderer();
-        NeoForge.EVENT_BUS.register(MiniRadar.class);
+        radarRenderer = new RadarRenderer(radarManager);
+
+        NeoForge.EVENT_BUS.addListener(this::onClientSetup);
+        NeoForge.EVENT_BUS.addListener(this::onRegisterGuiLayers);
     }
 
-    @SubscribeEvent
-    public static void onRegisterGuiOverlays(RegisterGuiOverlaysEvent event)
-    {
-        event.registerAboveAll(MiniRadar.MOD_ID, (gui, poseStack, partialTick, width, height) -> {
-            if (radarManager != null && radarRenderer != null) {
-                radarManager.update();
-                radarRenderer.render(gui, poseStack, partialTick, width, height);
-            }
-        });
+    public void onClientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(() -> {});
+    }
+
+    public void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(MOD_ID, radarRenderer::render);
     }
 }
