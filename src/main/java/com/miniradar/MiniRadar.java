@@ -29,6 +29,6 @@ public class MiniRadar
     }
 
     public void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
-        event.registerAboveAll(MOD_ID, radarRenderer::render);
+        event.registerAboveAll(net.minecraft.resources.ResourceLocation.fromNamespaceAndPath(MOD_ID, "radar"), radarRenderer::render);
     }
 }
