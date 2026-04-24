@@ -13,9 +13,15 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.language = 21
 
-// 👇 唯一正确的依赖！恢复它！所有类报错全消失
+// ✅ 必须写！插件靠这个加载MC依赖，解决74个类报错
+neoForge {
+    version = neo_version
+}
+
+// ✅ 绝对不写任何 dependencies 块！解决空指针报错
+
 tasks.withType(ProcessResources).configureEach {
     def replaceProperties = [
             minecraft_version   : minecraft_version,
@@ -31,7 +37,6 @@ tasks.withType(ProcessResources).configureEach {
             mod_description     : mod_description
     ]
     inputs.properties replaceProperties
-
     filesMatching(['META-INF/mods.toml', 'pack.mcmeta']) {
         expand replaceProperties
     }
