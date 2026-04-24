@@ -1,5 +1,6 @@
 package com.miniradar;
 
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -29,6 +30,6 @@ public class MiniRadar
     }
 
     public void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
-        event.registerAboveAll(MOD_ID, radarRenderer::render);
+        event.registerAboveAll(new ResourceLocation(MOD_ID, "radar"), radarRenderer::render);
     }
 }
