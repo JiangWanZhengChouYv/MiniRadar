@@ -47,8 +47,7 @@ public class ConfigManager
             }
             String json = GSON.toJson(config);
             Files.writeString(CONFIG_PATH, json);
-        } catch (IOException e) {
-        }
+        } catch (IOException e) {}
     }
 
     private void validateConfig()

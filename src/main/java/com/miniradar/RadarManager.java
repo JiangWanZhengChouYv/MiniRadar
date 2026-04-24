@@ -6,7 +6,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RadarManager
 {
@@ -37,25 +36,10 @@ public class RadarManager
                 return;
             }
 
-            var level = client.level;
-            var player = client.player;
-
+            Player player = client.player;
             double maxDistance = configManager.getDetectionRadius();
-            double maxDistanceSqr = maxDistance * maxDistance;
-            Vec3 playerPos = player.getPos();
-
-            detectedEntities = level.getEntities().getAll().stream()
-                .filter(entity -> entity != null && entity != player)
-                .filter(entity -> {
-                    try {
-                        double distSqr = entity.distanceToSqr(playerPos);
-                        return distSqr <= maxDistanceSqr;
-                    } catch (Exception e) {
-                        return false;
-                    }
-                })
-                .collect(Collectors.toList());
-
+            
+            detectedEntities = new ArrayList<>(client.level.getEntitiesOfClass(Entity.class, player.getBoundingBox().inflate(maxDistance)));
             lastUpdateTime = currentTime;
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,21 +54,21 @@ public class RadarManager
         }
 
         try {
-            var player = client.player;
-            Vec3 playerPos = player.getPos();
-            float playerYaw = player.getYaw();
+            Player player = client.player;
+            Vec3 playerPos = player.position();
+            float playerYaw = player.getYRot();
             double maxDistance = configManager.getDetectionRadius();
 
             return detectedEntities.stream()
                 .filter(entity -> {
                     try {
-                        Vec3 rotatedPos = rotateCoordinates(entity.getPos(), playerPos, playerYaw);
+                        Vec3 rotatedPos = rotateCoordinates(entity.position(), playerPos, playerYaw);
                         return Math.abs(rotatedPos.x) <= maxDistance && Math.abs(rotatedPos.z) <= maxDistance;
                     } catch (Exception e) {
                         return false;
                     }
                 })
-                .collect(Collectors.toList());
+                .toList();
         } catch (Exception e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -100,9 +84,7 @@ public class RadarManager
 
             double dx = entityPos.x - playerPos.x;
             double dz = entityPos.z - playerPos.z;
-
             double angle = -playerYaw * Math.PI / 180;
-
             double rotatedX = dx * Math.cos(angle) - dz * Math.sin(angle);
             double rotatedZ = dx * Math.sin(angle) + dz * Math.cos(angle);
 
@@ -116,17 +98,6 @@ public class RadarManager
     public List<Entity> getDetectedEntities()
     {
         return detectedEntities != null ? detectedEntities : new ArrayList<>();
-    }
-
-    public void reloadConfig()
-    {
-        try {
-            if (configManager != null) {
-                configManager.loadConfig();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public ConfigManager getConfigManager()

@@ -2,16 +2,16 @@ package com.miniradar;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.monster.CreeperEntity;
-import net.minecraft.world.entity.monster.ZombieEntity;
-import net.minecraft.world.entity.monster.SkeletonEntity;
-import net.minecraft.world.entity.monster.SpiderEntity;
-import net.minecraft.world.entity.monster.EndermanEntity;
+import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class RadarRenderer
         this.radarManager = radarManager;
     }
 
-    public void render(AbstractGui gui, PoseStack poseStack, float partialTick, int width, int height)
+    public void render(GuiGraphics gui, float partialTick)
     {
         try {
             if (client == null || client.player == null || client.level == null || radarManager == null) {
@@ -47,13 +47,13 @@ public class RadarRenderer
         }
     }
 
-    private void drawRadarBackground(AbstractGui gui)
+    private void drawRadarBackground(GuiGraphics gui)
     {
         gui.fill(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0x99000000);
         gui.renderOutline(RADAR_OFFSET, RADAR_OFFSET, RADAR_SIZE, RADAR_SIZE, 0xFFFFFFFF);
     }
 
-    private void drawPlayerMarker(AbstractGui gui)
+    private void drawPlayerMarker(GuiGraphics gui)
     {
         int centerX = RADAR_OFFSET + RADAR_CENTER;
         int centerY = RADAR_OFFSET + RADAR_CENTER;
@@ -63,7 +63,7 @@ public class RadarRenderer
         gui.fill(centerX - size, centerY - size, centerX + size, centerY + size, 0xFFFFFFFF);
     }
 
-    private void drawEntities(AbstractGui gui, float partialTick)
+    private void drawEntities(GuiGraphics gui, float partialTick)
     {
         if (client == null || radarManager == null) {
             return;
@@ -98,7 +98,7 @@ public class RadarRenderer
         }
     }
 
-    private void drawEntityMarker(AbstractGui gui, int x, int y, Entity entity)
+    private void drawEntityMarker(GuiGraphics gui, int x, int y, Entity entity)
     {
         int screenX = RADAR_OFFSET + x;
         int screenY = RADAR_OFFSET + y;
@@ -121,8 +121,8 @@ public class RadarRenderer
         }
 
         if (entity instanceof LivingEntity livingEntity) {
-            if (entity instanceof CreeperEntity || entity instanceof ZombieEntity || entity instanceof SkeletonEntity ||
-                entity instanceof SpiderEntity || entity instanceof EndermanEntity) {
+            if (entity instanceof Creeper || entity instanceof Zombie || entity instanceof Skeleton ||
+                entity instanceof Spider || entity instanceof Enderman) {
                 return 0xFFFF0000;
             }
 
