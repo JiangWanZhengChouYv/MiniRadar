@@ -16,10 +16,6 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 // 👇 唯一正确的依赖！恢复它！所有类报错全消失
-dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-}
-
 tasks.withType(ProcessResources).configureEach {
     def replaceProperties = [
             minecraft_version   : minecraft_version,
