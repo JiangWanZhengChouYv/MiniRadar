@@ -15,8 +15,6 @@ java {
 neoForge {
     // 真实可用的26.1版本（稳定版）
     version = "26.1.2.10-beta"
-    // 关键：启用无混淆模式
-    useUnobfuscatedSources = true
 }
 
 processResources {
