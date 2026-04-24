@@ -1,18 +1,13 @@
 package com.miniradar;
 
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.PlayerEntity;
 import net.minecraft.world.entity.monster.CreeperEntity;
-import net.minecraft.world.entity.monster.EndermanEntity;
+import net.minecraft.world.entity.monster.ZombieEntity;
 import net.minecraft.world.entity.monster.SkeletonEntity;
 import net.minecraft.world.entity.monster.SpiderEntity;
-import net.minecraft.world.entity.monster.ZombieEntity;
-import net.minecraft.world.entity.player.PlayerEntity;
+import net.minecraft.world.entity.monster.EndermanEntity;
 import net.minecraft.world.phys.Vec3d;
-import java.util.List;
 
 public class RadarRenderer
 {
