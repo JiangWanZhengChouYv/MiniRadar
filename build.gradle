@@ -13,7 +13,7 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.language = 21
+java.toolchain.languageVersion = 21
 
 // ✅ 必须写！插件靠这个加载MC依赖，解决74个类报错
 neoForge {
