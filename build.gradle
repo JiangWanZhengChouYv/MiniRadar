@@ -15,14 +15,17 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-// 👇👇👇 【关键】只保留这一行，其他全部删除
-neoForge {
-    version = neo_version
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
 }
 
 tasks.withType(ProcessResources).configureEach {
     def replaceProperties = [
             minecraft_version   : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version         : neo_version,
+            neo_version_range   : neo_version_range,
+            loader_version_range: loader_version_range,
             mod_id              : mod_id,
             mod_name            : mod_name,
             mod_license         : mod_license,
