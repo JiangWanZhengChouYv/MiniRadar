@@ -1,5 +1,6 @@
 package com.miniradar;
 
+import net.minecraft.client.gui.GuiGraphics;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -8,13 +9,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.monster.Skeleton;
-import net.minecraft.world.entity.monster.Spider;
-import net.minecraft.world.entity.monster.Enderman;
+import net.minecraft.world.entity.monster.CreeperEntity;
+import net.minecraft.world.entity.monster.ZombieEntity;
+import net.minecraft.world.entity.monster.SkeletonEntity;
+import net.minecraft.world.entity.monster.SpiderEntity;
+import net.minecraft.world.entity.monster.EndermanEntity;
 import net.minecraft.world.phys.Vec3;
+
 
 import java.util.List;
 
@@ -51,11 +52,11 @@ public class RadarRenderer
 
     private void drawRadarBackground(PoseStack poseStack)
     {
-        net.minecraft.client.gui.net.minecraft.client.gui.net.minecraft.client.gui.net.minecraft.client.gui.Gui.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0x99000000);
-        net.minecraft.client.gui.Gui.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET+1, 0xFFFFFFFF);
-        net.minecraft.client.gui.Gui.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET+1, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
-        net.minecraft.client.gui.Gui.fill(poseStack, RADAR_OFFSET + RADAR_SIZE-1, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
-        net.minecraft.client.gui.Gui.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE-1, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
+        GuiGraphics.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0x99000000);
+        GuiGraphics.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET+1, 0xFFFFFFFF);
+        GuiGraphics.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET+1, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
+        GuiGraphics.fill(poseStack, RADAR_OFFSET + RADAR_SIZE-1, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
+        GuiGraphics.fill(poseStack, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE-1, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
     }
 
     private void drawPlayerMarker(PoseStack poseStack)
@@ -64,8 +65,8 @@ public class RadarRenderer
         int centerY = RADAR_OFFSET + RADAR_CENTER;
         int size = 4;
 
-        net.minecraft.client.gui.Gui.fill(poseStack, centerX - size - 1, centerY - size - 1, centerX + size + 1, centerY + size + 1, 0xFF000000);
-        net.minecraft.client.gui.Gui.fill(poseStack, centerX - size, centerY - size, centerX + size, centerY + size, 0xFFFFFFFF);
+        GuiGraphics.fill(poseStack, centerX - size - 1, centerY - size - 1, centerX + size + 1, centerY + size + 1, 0xFF000000);
+        GuiGraphics.fill(poseStack, centerX - size, centerY - size, centerX + size, centerY + size, 0xFFFFFFFF);
     }
 
     private void drawEntities(PoseStack poseStack, float partialTick)
@@ -111,8 +112,8 @@ public class RadarRenderer
 
         int color = getEntityColor(entity);
 
-        net.minecraft.client.gui.Gui.fill(poseStack, screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);
-        net.minecraft.client.gui.Gui.fill(poseStack, screenX - size, screenY - size, screenX + size, screenY + size, color);
+        GuiGraphics.fill(poseStack, screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);
+        GuiGraphics.fill(poseStack, screenX - size, screenY - size, screenX + size, screenY + size, color);
     }
 
     private int getEntityColor(Entity entity)
@@ -126,8 +127,7 @@ public class RadarRenderer
         }
 
         if (entity instanceof LivingEntity livingEntity) {
-            if (entity instanceof CreeperEntity || entity instanceof ZombieEntity || entity instanceof SkeletonEntity ||
-                entity instanceof SpiderEntity || entity instanceof EndermanEntity) {
+            if (entity instanceof CreeperEntity || entity instanceof ZombieEntity || entity instanceof SkeletonEntity || entity instanceof SpiderEntity || entity instanceof EndermanEntity) {
                 return 0xFFFF0000;
             }
 
