@@ -20,7 +20,7 @@ public class ConfigManager
         loadConfig();
     }
 
-    private void loadConfig()
+    public void loadConfig()
     {
         try {
             if (Files.exists(CONFIG_PATH)) {
