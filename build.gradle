@@ -1,38 +1,27 @@
 plugins {
-    id 'java-library'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'java'
+    id 'net.neoforged.gradle' version '7.0.142'
 }
 
 version = mod_version
-group = mod_group_id
-
-base {
-    archivesName = mod_id
-}
-
-// 👇 彻底删除 neoForge{}！彻底删除JDK配置！彻底删除所有坑！
-// 👇 只保留官方最小依赖，解决类找不到 + 空指针 + 方法不存在
-dependencies {
-    implementation fg.deobf("net.neoforged:neoforge:${neo_version}")
-}
-
-tasks.withType(ProcessResources).configureEach {
-    def replaceProperties = [
-            minecraft_version   : minecraft_version,
-            mod_id              : mod_id,
-            mod_name            : mod_name,
-            mod_license         : mod_license,
-            mod_version         : mod_version,
-            mod_authors         : mod_authors,
-            mod_description     : mod_description
-    ]
-    inputs.properties replaceProperties
-    filesMatching(['META-INF/mods.tomm', 'pack.mcmeta']) {
-        expand replaceProperties
-    }
-}
+group = mod_group
 
 java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
+}
+
+// 官方标准依赖，无fg、无空指针、无类找不到
+dependencies {
+    implementation "net.neoforged:neoforge:${neo_version}"
+}
+
+processResources {
+    inputs.property 'mod_id', mod_id
+    filesMatching('META-INF/mods.toml') {
+        expand 'mod_id': mod_id,
+                'mod_version': mod_version,
+                'minecraft_version': minecraft_version,
+                'neo_version': neo_version
+    }
 }
