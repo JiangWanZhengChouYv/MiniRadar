@@ -1,6 +1,7 @@
 pluginManagement {
     repositories {
-        // NeoForge官方仓库，必须放在第一位
+        // 26.1专属快照仓库必须加！
+        maven { url 'https://maven.neoforged.net/snapshots' }
         maven { url 'https://maven.neoforged.net/releases' }
         gradlePluginPortal()
     }
@@ -8,6 +9,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
+        maven { url 'https://maven.neoforged.net/snapshots' }
         maven { url 'https://maven.neoforged.net/releases' }
         mavenCentral()
     }

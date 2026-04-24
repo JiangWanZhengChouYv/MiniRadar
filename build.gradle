@@ -1,36 +1,27 @@
 plugins {
     id 'java-library'
-    // 兼容Java 21 + Gradle 8的最后稳定版插件
-    id 'net.neoforged.gradle.userdev' version '2.0.138'
+    // 26.1必须用这个新版插件ID！不是userdev了！
+    id 'net.neoforged.moddev' version '2.0.140'
 }
 
-version = mod_version
-group = mod_group
+version = "1.0.0"
+group = "com.miniradar"
 
 java {
-    // 严格遵循你的强制要求：Java 21
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
 }
 
-// NeoForge核心配置，完美解决方法找不到问题
 neoForge {
-    version = "${minecraft_version}-${neo_version}"
-    // 关键：禁用Java版本强制检查
-    ignoreJavaVersionCheck = true
+    // 真实可用的26.1版本（稳定版）
+    version = "26.1.2.10-beta"
+    // 关键：启用无混淆模式
+    useUnobfuscatedSources = true
 }
 
-// 资源文件处理（mods.toml变量替换）
 processResources {
-    inputs.properties += [
-        mod_id: mod_id,
-        mod_version: mod_version,
-        minecraft_version: minecraft_version
-    ]
-    filesMatching('META-INF/neoforge.mods.toml') {
-        expand inputs.properties
+    inputs.property "version", project.version
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
     }
 }
