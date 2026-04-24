@@ -1,19 +1,20 @@
 plugins {
     id 'java-library'
-    // 26.1必须用这个新版插件ID！不是userdev了！
+    // 完全保留你的官方moddev插件，不动！
     id 'net.neoforged.moddev' version '2.0.140'
 }
 
 version = "1.0.0"
 group = "com.miniradar"
 
+// ✅ 唯一修改：把 21 → 25（26.1 强制要求Java25，这是报错根源）
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 neoForge {
-    // 真实可用的26.1版本（稳定版）
+    // 完全保留你要的 26.1.2.10-beta，不动！
     version = "26.1.2.10-beta"
 }
 
