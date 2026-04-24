@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.gradle.userdev' version '7.0.142'
+    id 'net.neoforged.gradle' version '7.0.142'
 }
 
 version = mod_version
@@ -15,8 +15,8 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
-dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
+neoForge {
+    version = neo_version
 }
 
 tasks.withType(ProcessResources).configureEach {
