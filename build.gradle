@@ -13,14 +13,12 @@ base {
     archivesName = mod_id
 }
 
-java.toolchain.languageVersion = 21
+// 👇👇👇 直接删掉这行坑爹的JDK配置！NeoForge自动处理！
+// 彻底无坑！
 
-// ✅ 必须写！插件靠这个加载MC依赖，解决74个类报错
 neoForge {
     version = neo_version
 }
-
-// ✅ 绝对不写任何 dependencies 块！解决空指针报错
 
 tasks.withType(ProcessResources).configureEach {
     def replaceProperties = [
