@@ -17,35 +17,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # ✅ 唯一核心修复：Java 21 → 25（NeoForge 26.1 强制要求）
-      # ✅ 微软发行版无 Java25，替换为官方标准 Temurin
+      # ✅ 正确：JDK 25 (MC26.1 强制要求)
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
           java-version: 25
           distribution: 'temurin'
+          cache: gradle
 
+      # ✅ 修复：强制使用 Gradle 9.1.0 (官方要求)
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
-          gradle-version: 8.11.1
+          gradle-version: 9.1.0
 
-      # ✅ 完全保留：手动生成 Gradle Wrapper（你要求必须保留）
+      # ✅ 修复：生成正确的 Gradle Wrapper 9.1.0
       - name: Generate Gradle Wrapper
         run: |
-          gradle wrapper --gradle-version=8.11.1
+          gradle wrapper --gradle-version=9.1.0
 
-      # ✅ 增加 --no-daemon 防止缓存冲突，不影响功能
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      # ✅ 构建命令
       - name: Build
         run: ./gradlew build --no-daemon
 
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: Artifacts
-          path: build/libs/
-
-      - name: Upload JAR
+      # ✅ 精简：合并冗余上传，只保留一个
+      - name: Upload Mod Jar
         uses: actions/upload-artifact@v4
         with:
           name: miniradar

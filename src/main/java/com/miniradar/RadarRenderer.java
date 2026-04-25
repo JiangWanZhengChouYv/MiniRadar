@@ -1,7 +1,10 @@
 package com.miniradar;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -12,9 +15,12 @@ import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.entity.monster.Enderman;
 import net.minecraft.world.phys.Vec3;
+
+
 import java.util.List;
 
-public class RadarRenderer {
+public class RadarRenderer
+{
     private final Minecraft client = Minecraft.getInstance();
     private final RadarManager radarManager;
 
@@ -22,34 +28,34 @@ public class RadarRenderer {
     private static final int RADAR_CENTER = 50;
     private static final int RADAR_OFFSET = 10;
 
-    public RadarRenderer(RadarManager radarManager) {
+    public RadarRenderer(RadarManager radarManager)
+    {
         this.radarManager = radarManager;
     }
 
-    // 🔑 关键：MC 26.1 正式版的render方法签名必须是这个！
     public void render(GuiGraphics guiGraphics, float partialTick) {
-        try {
-            if (client == null || client.player == null || client.level == null || radarManager == null) {
-                return;
-            }
-
-            radarManager.update();
-
-            drawRadarBackground(guiGraphics);
-            drawPlayerMarker(guiGraphics);
-            drawEntities(guiGraphics, partialTick);
-        } catch (Exception e) {
-            e.printStackTrace();
+    try {
+        if (client == null || client.player == null || client.level == null || radarManager == null) {
+            return;
         }
-    }
 
-    // 🔑 所有draw方法都用GuiGraphics作为参数
+        radarManager.update();
+
+        // 只改这里：poseStack → guiGraphics
+        drawRadarBackground(guiGraphics);
+        drawPlayerMarker(guiGraphics);
+        drawEntities(guiGraphics, partialTick);
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
     private void drawRadarBackground(GuiGraphics guiGraphics) {
         guiGraphics.fill(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0x99000000);
-        guiGraphics.fill(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + 1, 0xFFFFFFFF);
-        guiGraphics.fill(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + 1, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
-        guiGraphics.fill(RADAR_OFFSET + RADAR_SIZE - 1, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
-        guiGraphics.fill(RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE - 1, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
+        guiGraphics.fill(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET+1, 0xFFFFFFFF);
+        guiGraphics.fill(RADAR_OFFSET, RADAR_OFFSET, RADAR_OFFSET+1, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
+        guiGraphics.fill(RADAR_OFFSET + RADAR_SIZE-1, RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
+        guiGraphics.fill(RADAR_OFFSET, RADAR_OFFSET + RADAR_SIZE-1, RADAR_OFFSET + RADAR_SIZE, RADAR_OFFSET + RADAR_SIZE, 0xFFFFFFFF);
     }
 
     private void drawPlayerMarker(GuiGraphics guiGraphics) {
@@ -102,7 +108,7 @@ public class RadarRenderer {
 
         int color = getEntityColor(entity);
 
-        guiGraphics.fill(screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);
+        guiGraphics.fill(screenX - size - 1, screenY - size - 1, screenX + size + 1, screenY + size + 1, 0xFF000000);  
         guiGraphics.fill(screenX - size, screenY - size, screenX + size, screenY + size, color);
     }
 
@@ -115,10 +121,11 @@ public class RadarRenderer {
             return 0xFFFFFF00;
         }
 
-        if (entity instanceof LivingEntity) {
+        if (entity instanceof LivingEntity livingEntity) {
             if (entity instanceof Creeper || entity instanceof Zombie || entity instanceof Skeleton || entity instanceof Spider || entity instanceof Enderman) {
                 return 0xFFFF0000;
             }
+
             return 0xFF00FF00;
         }
 
