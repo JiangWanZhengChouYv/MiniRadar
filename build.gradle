@@ -1,23 +1,50 @@
 plugins {
     id 'java-library'
-    // 完全保留你的官方moddev插件，不动！
     id 'net.neoforged.moddev' version '2.0.140'
 }
 
-version = "1.0.0"
 group = "com.miniradar"
+version = "1.0.0"
 
-// ✅ 唯一修改：把 21 → 25（26.1 强制要求Java25，这是报错根源）
+// 使用 toolchain 代替 sourceCompatibility，适配 JDK 25
 java {
-    sourceCompatibility = JavaVersion.VERSION_25
-    targetCompatibility = JavaVersion.VERSION_25
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
 }
 
+// 仓库（确保能下载 NeoForge 及第三方库）
+repositories {
+    mavenCentral()
+    maven {
+        name = "NeoForge"
+        url = "https://maven.neoforged.net/releases"
+    }
+}
+
+// NeoForge 配置
 neoForge {
-    // 完全保留你要的 26.1.2.10-beta，不动！
+    // 使用你截图中出现的 26.1.2.10-beta
     version = "26.1.2.10-beta"
+
+    // 可选：配置运行目录（开发时点击运行客户端/服务端）
+    // runs {
+    //     client {
+    //         workingDirectory = project.file("run/client")
+    //     }
+    //     server {
+    //         workingDirectory = project.file("run/server")
+    //     }
+    // }
 }
 
+// 依赖
+dependencies {
+    // 即使插件会自动添加，显式声明可以避免某些解析问题
+    implementation "net.neoforged:neoforge:26.1.2.10-beta"
+}
+
+// 处理 mods.toml 版本替换
 processResources {
     inputs.property "version", project.version
     filesMatching("META-INF/mods.toml") {

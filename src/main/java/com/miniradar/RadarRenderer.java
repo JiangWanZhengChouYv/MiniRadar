@@ -1,6 +1,6 @@
 package com.miniradar;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;          // 26.1 新渲染上下文
+import net.minecraft.client.gui.GuiGraphics;        // 26.1 新渲染上下文
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.util.profiling.DeltaTracker;               // 新增，替代浮点 partialTick
+import net.minecraft.client.DeltaTracker;              // 新增，替代浮点 partialTick
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class RadarRenderer
     }
 
     // 方法签名改为 GuiGraphicsExtractor + DeltaTracker
-    public void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
+    public void render(GuiGraphics graphics, DeltaTracker delta) {
         try {
             if (client == null || client.player == null || client.level == null || radarManager == null) {
                 return;
