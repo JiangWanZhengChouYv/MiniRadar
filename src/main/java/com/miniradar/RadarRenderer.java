@@ -1,6 +1,6 @@
 package com.miniradar;
 
-import net.minecraft.client.gui.GuiGraphics;        // 26.1 新渲染上下文
+import net.minecraft.client.gui.GuiGraphicsExtractor;       // 26.1 新渲染上下文
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.Gui;
@@ -29,7 +29,7 @@ public class RadarRenderer
     }
 
     // 方法签名改为 GuiGraphicsExtractor + DeltaTracker
-    public void render(GuiGraphics graphics, DeltaTracker delta) {
+    public void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
         try {
             if (client == null || client.player == null || client.level == null || radarManager == null) {
                 return;

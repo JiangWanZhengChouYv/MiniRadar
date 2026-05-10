@@ -6,14 +6,12 @@ plugins {
 group = "com.miniradar"
 version = "1.0.0"
 
-// 使用 toolchain 代替 sourceCompatibility，适配 JDK 25
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
-// 仓库（确保能下载 NeoForge 及第三方库）
 repositories {
     mavenCentral()
     maven {
@@ -22,29 +20,15 @@ repositories {
     }
 }
 
-// NeoForge 配置
 neoForge {
-    // 使用你截图中出现的 26.1.2.10-beta
     version = "26.1.2.10-beta"
-
-    // 可选：配置运行目录（开发时点击运行客户端/服务端）
-    // runs {
-    //     client {
-    //         workingDirectory = project.file("run/client")
-    //     }
-    //     server {
-    //         workingDirectory = project.file("run/server")
-    //     }
-    // }
 }
 
-// 依赖
 dependencies {
-    // 即使插件会自动添加，显式声明可以避免某些解析问题
-    implementation "net.neoforged:neoforge:26.1.2.10-beta"
+    // 这是Mod开发的核心依赖，提供了所有net.minecraft类
+    implementation "net.neoforged:neoforge:${neoForge.version}"
 }
 
-// 处理 mods.toml 版本替换
 processResources {
     inputs.property "version", project.version
     filesMatching("META-INF/mods.toml") {
