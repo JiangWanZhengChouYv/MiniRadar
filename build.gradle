@@ -30,8 +30,14 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.properties(
+        version: project.version,
+        mod_id: 'miniradar'
+    )
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+        expand(
+            version: project.version,
+            mod_id: 'miniradar'
+        )
     }
 }
