@@ -1,9 +1,14 @@
-modLoader="javafml"
-loaderVersion="[26,)"
-license="MIT"
+modLoader = "javafml"
+loaderVersion = "${loader_version_range}"
+license = "${mod_license}"
+
+# 关键：必须声明兼容的版本范围
+neoforge_version_range = "${neo_version_range}"
+minecraft_version_range = "${minecraft_version_range}"
+
 [[mods]]
-modId="${mod_id}"
-version="${mod_version}"
-displayName="MiniRadar"
-authors="You"
-description="Mini Radar Mod for Minecraft 26.1 (Java 21 Compatible)"
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "You"
+description = "Mini Radar Mod for Minecraft 26.1"

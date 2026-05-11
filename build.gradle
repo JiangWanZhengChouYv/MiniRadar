@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.miniradar"
-version = "1.0.0"
+version = project.mod_version
 
 java {
     toolchain {
@@ -21,20 +21,22 @@ repositories {
 }
 
 neoForge {
-    version = "26.1.2.10-beta"
+    version = project.neo_version
 }
 
 dependencies {
-    // 这是Mod开发的核心依赖，提供了所有net.minecraft类
-    implementation "net.neoforged:neoforge:${neoForge.version}"
+    implementation "net.neoforged:neoforge:${project.neo_version}"
 }
 
 processResources {
     inputs.properties([
-        version      : project.version,
-        mod_id       : project.mod_id,
-        mod_version  : project.mod_version,
-        mod_name     : project.mod_name
+        version                : project.mod_version,
+        mod_id                 : project.mod_id,
+        mod_name               : project.mod_name,
+        mod_license            : project.mod_license,
+        minecraft_version_range: project.minecraft_version_range,
+        neo_version_range      : project.neo_version_range,
+        loader_version_range   : project.loader_version_range
     ])
     filesMatching("META-INF/mods.toml") {
         expand(inputs.properties)
