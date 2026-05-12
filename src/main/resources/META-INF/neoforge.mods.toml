@@ -1,13 +1,19 @@
-# 加载器配置
 modLoader = "javafml"
 loaderVersion = "${loader_version_range}"
 license = "${mod_license}"
 
-# 兼容的版本范围，是加载器识别模组的关键
+# 关键：声明兼容的Minecraft和NeoForge版本范围
 neoforge_version_range = "${neo_version_range}"
 minecraft_version_range = "${minecraft_version_range}"
 
-# 依赖项配置
+[[mods]]
+modId = "${mod_id}"
+version = "${mod_version}"
+displayName = "${mod_name}"
+authors = "You"
+description = "Mini Radar Mod for Minecraft 26.1"
+
+# 依赖项配置（告诉加载器模组需要什么）
 [[dependencies.${mod_id}]]
     modId = "neoforge"
     type = "required"
@@ -21,10 +27,3 @@ minecraft_version_range = "${minecraft_version_range}"
     versionRange = "${minecraft_version_range}"
     ordering = "NONE"
     side = "BOTH"
-
-# 模组基本信息
-[[mods]]
-modId = "${mod_id}"
-version = "${mod_version}"  # 注意：这里建议使用 mod_version
-displayName = "${mod_name}"
-description = "Mini Radar Mod for Minecraft 26.1"
