@@ -12,8 +12,11 @@ java {
     }
 }
 
+// 1. （关键步骤）必须清空 ModDevGradle 插件自动添加的官方仓库，否则镜像不生效
+repositories.clear()
+
+// 2. 手动添加稳定的国内镜像源，并放在最前面，确保优先访问
 repositories {
-    mavenCentral()
     maven {
         name = "NeoForge_Mirror"
         url = "https://neoforged.forgecdn.net/releases"
@@ -22,6 +25,18 @@ repositories {
         name = "Mojang_Meta_Mirror"
         url = "https://neoforged.forgecdn.net/mojang-meta"
     }
+
+    // 3. （可选）保留官方仓库作为备用，当镜像抽风时可以回退
+    maven {
+        name = "NeoForge_Official"
+        url = "https://maven.neoforged.net/releases"
+    }
+    maven {
+        name = "Mojang_Meta_Official"
+        url = "https://maven.neoforged.net/mojang-meta"
+    }
+
+    // 4. Minecraft 官方库，保持不变
     maven {
         name = "Minecraft_Libraries"
         url = "https://libraries.minecraft.net/"
@@ -38,14 +53,14 @@ dependencies {
 
 processResources {
     inputs.properties([
-        version                 : project.mod_version,
-        mod_id                  : project.mod_id,
-        mod_name                : project.mod_name,
-        mod_version             : project.mod_version,
-        mod_license             : project.mod_license,
-        minecraft_version_range : project.minecraft_version_range,
-        neo_version_range       : project.neo_version_range,
-        loader_version_range    : project.loader_version_range
+        version                : project.mod_version,
+        mod_id                 : project.mod_id,
+        mod_name               : project.mod_name,
+        mod_version            : project.mod_version,
+        mod_license            : project.mod_license,
+        minecraft_version_range: project.minecraft_version_range,
+        neo_version_range      : project.neo_version_range,
+        loader_version_range   : project.loader_version_range
     ])
     filesMatching("META-INF/neoforge.mods.toml") {
         expand(inputs.properties)
