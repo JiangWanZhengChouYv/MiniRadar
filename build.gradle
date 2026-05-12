@@ -38,7 +38,7 @@ processResources {
         neo_version_range      : project.neo_version_range,
         loader_version_range   : project.loader_version_range
     ])
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand(inputs.properties)
     }
 }
