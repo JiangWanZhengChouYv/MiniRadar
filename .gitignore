@@ -2,3 +2,4 @@
 /.trae
 .gradle/
 build/
+.vscode/
