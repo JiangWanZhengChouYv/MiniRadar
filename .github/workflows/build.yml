@@ -20,6 +20,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Remove invalid wrapper jar
+        run: rm -f gradle/wrapper/gradle-wrapper.jar
+      
       - name: Setup JDK
         uses: actions/setup-java@v4
         with:
