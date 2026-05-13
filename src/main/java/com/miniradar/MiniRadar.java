@@ -6,6 +6,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.minecraft.resources.Identifier;
+import net.neoforged.bus.api.IEventBus;
 
 @Mod(value = MiniRadar.MOD_ID, dist = Dist.CLIENT)
 public class MiniRadar
@@ -16,12 +17,12 @@ public class MiniRadar
     public static RadarManager radarManager;
     public static RadarRenderer radarRenderer;
 
-    public MiniRadar() {
+    public MiniRadar(IEventBus modEventBus) {
         configManager = new ConfigManager();
         radarManager = new RadarManager();
         radarRenderer = new RadarRenderer(radarManager);
 
-        NeoForge.EVENT_BUS.addListener(this::onClientSetup);
+        modEventBus.addListener(this::onClientSetup); 
         NeoForge.EVENT_BUS.addListener(this::onRegisterGuiLayers);
     }
 
