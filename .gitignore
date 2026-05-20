@@ -1,7 +1,9 @@
 /.DS_Store
+.DS_Store
 /.trae
 .gradle/
 build/
 .vscode/
 *.class
 bin/
+gradle-9.5.1-bin.zip
